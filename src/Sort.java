@@ -1,21 +1,35 @@
 import java.util.Arrays;
+import java.util.Random;
 
 public class Sort {
 
     public static int numComparisons = 0, numSwaps = 0;
 
     public static void main(String[] args){
-        int[] arr = {9 ,2 ,7 ,1 ,10 ,3 ,6 ,4 ,5 ,8};
-        System.out.println("Before: " + Arrays.toString(arr));
-        bubbleSort(arr);
-        System.out.println("After: " + Arrays.toString(arr));
-        System.out.println("There were " + numComparisons + " comparisons and " + numSwaps + " swaps");
+
+        long startTime, endTime;
+        int[] arr;
+        int[] arraySizes = {100,200,400,800,1600,3200,6400};
+
+        for(int arraySize: arraySizes){
+            startTime = System.currentTimeMillis();
+            for(int i =0; i < 1000; i++){
+                arr = randomArray(arraySize);
+                bubbleSort(arr);
+            }
+            endTime = System.currentTimeMillis();
+
+            System.out.println(arraySize + "\t" + (endTime - startTime));
+        }
+
+
+
+
     }
 
 
 
-
-    public static void bubbleSort(int[] arr){
+    public static void bubbleSortSlow(int[] arr){
         int lastPos = arr.length -1;
         int innerLastPos = lastPos;
         int temp;
@@ -31,7 +45,39 @@ public class Sort {
                 }
             }
             innerLastPos--;
-            System.out.println("Pass " + (i+1) + ":" +  Arrays.toString(arr));
+            //System.out.println("Pass " + (i+1) + ":" +  Arrays.toString(arr));
+        }
+    }
+
+    public static int[] randomArray(int n){
+        Random rand = new Random();
+        int[] arr = new int[n];
+
+        for(int i =0; i< n; i++){
+            arr[i] = rand.nextInt(100);
+        }
+        return arr;
+
+    }
+
+    public static void bubbleSort(int[] arr){
+        int firstPos = 0, lastPos = arr.length -1;
+        int temp, lastSwapPos;
+
+        while(firstPos < lastPos){
+            lastSwapPos = firstPos;
+            for(int j = 0; j < lastPos; j++){
+                numComparisons++;
+                if (arr[j] > arr[j + 1]){
+                    temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                    numSwaps++;
+                    lastSwapPos = j;
+                }
+            }
+            lastPos = lastSwapPos;
+            //System.out.println("Pass:" +  Arrays.toString(arr));
         }
     }
 
