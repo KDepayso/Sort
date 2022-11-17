@@ -15,45 +15,93 @@ public class Sort {
         long startTime, endTime;
 
 
+
+
+
+
         for(int a = 0; a < arraySizes.length; a++){
             startTime = System.currentTimeMillis();
             for(int i = 0; i < 1000; i++){
                 arr = randomArray(arraySizes[a]);
-                insertionSort(arr);
+                shellSort(arr, 2);
             }
             endTime = System.currentTimeMillis();
             sortTimes[a] = endTime - startTime;
         }
 
 
-        for(int a = 0; a < arraySizes.length; a++){
-            startTime = System.currentTimeMillis();
-            for(int i = 0; i < 1000; i++){
-                arr = randomArray(arraySizes[a]);
-                insertionSortRecursive(arr,0,arr.length - 1);
-            }
-            endTime = System.currentTimeMillis();
-            sortTimesRecursive[a] = endTime - startTime;
-        }
-
         for(int a =0; a < arraySizes.length; a++){
-            System.out.println(arraySizes[a] + "\t" + sortTimes[a] + "\t" + sortTimesRecursive[a]);
+            System.out.println(arraySizes[a] + "\t" + sortTimes[a] + "\t");
         }
 
 
 
+        startTime = System.currentTimeMillis();
+        for(int i = 0; i < 1000; i++){
+            arr = randomArray(10000);
+            shellSort(arr, 2);
+        }
+        endTime = System.currentTimeMillis();
+        System.out.println("Gap list of [5000, 2500, 1250, 625, 312, 156, 78, 39, 19, 9, 4, 2, 1]");
+        System.out.println("Execution time is: " + (endTime - startTime));
 
 
 
 
-//
-//        System.out.println("Before: " + Arrays.toString(arr));
-//        insertionSortRecursive(arr,0,arr.length - 1);
-//        System.out.println("After: " + Arrays.toString(arr));
-//        System.out.println("There were " + numComparisons + " and " + numUpdates + " updates");
+        startTime = System.currentTimeMillis();
+        for(int i = 0; i < 1000; i++){
+            arr = randomArray(10000);
+            shellSort(arr, 3);
+        }
+        endTime = System.currentTimeMillis();
+        System.out.println("Gap list of [3333, 1111, 370, 123, 31, 13, 4, 1]");
+        System.out.println("Execution time is: " + (endTime - startTime));
+
+        startTime = System.currentTimeMillis();
+        for(int i = 0; i < 1000; i++){
+            arr = randomArray(10000);
+            shellSort(arr, 4);
+        }
+        endTime = System.currentTimeMillis();
+        System.out.println("Gap list of [2500, 625, 156, 39, 9, 2, 1]");
+        System.out.println("Execution time is: " + (endTime - startTime));
+
+        startTime = System.currentTimeMillis();
+        for(int i = 0; i < 1000; i++){
+            arr = randomArray(10000);
+            shellSort(arr, 2.23);
+        }
+        endTime = System.currentTimeMillis();
+        System.out.println("Gap list of [3875, 1695, 749, 326, 138, 57, 78, 23, 9, 4, 1]");
+        System.out.println("Execution time is: " + (endTime - startTime));
+
+
+
+
+
+
 
 
     }
+
+    public static void shellSort(int[] arr, double n){
+        int temp, index;
+
+        for(int gap = arr.length / 2; gap > 0; gap /= n){
+            for(int i = gap; i < arr.length; i++){
+                temp = arr[i];
+                for(index = i; index >= gap && arr[index - gap] > temp; index -=gap){
+                    arr[index] = arr[index - gap];
+                }
+                arr[index] = temp;
+            }
+        }
+    }
+
+
+
+
+
 
 
 
