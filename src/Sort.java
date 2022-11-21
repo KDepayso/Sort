@@ -1,4 +1,3 @@
-import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -16,64 +15,41 @@ public class Sort {
 
 
 
+//
+//        for(int a = 0; a < arraySizes.length; a++){
+//            startTime = System.currentTimeMillis();
+//            for(int i = 0; i < 1000; i++){
+//                arr = randomArray(arraySizes[a]);
+//                mergeSort(arr);
+//            }
+//            endTime = System.currentTimeMillis();
+//            sortTimes[a] = endTime - startTime;
+//        }
+//
+//
+//        for(int a =0; a < arraySizes.length; a++){
+//            System.out.println(arraySizes[a] + "\t" + sortTimes[a] + "\t");
+//        }
+//
+//
 
-
-
-        for(int a = 0; a < arraySizes.length; a++){
-            startTime = System.currentTimeMillis();
-            for(int i = 0; i < 1000; i++){
-                arr = randomArray(arraySizes[a]);
-                shellSort(arr, 2);
-            }
-            endTime = System.currentTimeMillis();
-            sortTimes[a] = endTime - startTime;
-        }
-
-
-        for(int a =0; a < arraySizes.length; a++){
-            System.out.println(arraySizes[a] + "\t" + sortTimes[a] + "\t");
-        }
-
-
-
-        startTime = System.currentTimeMillis();
-        for(int i = 0; i < 1000; i++){
-            arr = randomArray(10000);
-            shellSort(arr, 2);
-        }
-        endTime = System.currentTimeMillis();
-        System.out.println("Gap list of [5000, 2500, 1250, 625, 312, 156, 78, 39, 19, 9, 4, 2, 1]");
-        System.out.println("Execution time is: " + (endTime - startTime));
+//        System.out.println("Before: "+ Arrays.toString(arr));
+//        mergeSortSlow(arr,0,arr.length -1);
+//        System.out.println("After: "+ Arrays.toString(arr));
+//
 
 
 
 
-        startTime = System.currentTimeMillis();
-        for(int i = 0; i < 1000; i++){
-            arr = randomArray(10000);
-            shellSort(arr, 3);
-        }
-        endTime = System.currentTimeMillis();
-        System.out.println("Gap list of [3333, 1111, 370, 123, 31, 13, 4, 1]");
-        System.out.println("Execution time is: " + (endTime - startTime));
+        System.out.println("Array Size : 5000");
+        System.out.println("Temporary array passed as paramater: " + timeSortParameter(5000));
+        System.out.println("Temporary array generated in merge method: " + timeSortParameterSlow(5000));
 
-        startTime = System.currentTimeMillis();
-        for(int i = 0; i < 1000; i++){
-            arr = randomArray(10000);
-            shellSort(arr, 4);
-        }
-        endTime = System.currentTimeMillis();
-        System.out.println("Gap list of [2500, 625, 156, 39, 9, 2, 1]");
-        System.out.println("Execution time is: " + (endTime - startTime));
+        System.out.println("Array Size : 10000");
+        System.out.println("Temporary array passed as paramater: " + timeSortParameter(10000));
+        System.out.println("Temporary array generated in merge method: " + timeSortParameterSlow(10000));
 
-        startTime = System.currentTimeMillis();
-        for(int i = 0; i < 1000; i++){
-            arr = randomArray(10000);
-            shellSort(arr, 2.23);
-        }
-        endTime = System.currentTimeMillis();
-        System.out.println("Gap list of [3875, 1695, 749, 326, 138, 57, 78, 23, 9, 4, 1]");
-        System.out.println("Execution time is: " + (endTime - startTime));
+
 
 
 
@@ -83,6 +59,97 @@ public class Sort {
 
 
     }
+
+
+    public static long timeSortParameter(int n){
+        long startTime, endTime,sortTime;
+
+        startTime = System.currentTimeMillis();
+        for(int i = 0; i < 1000; i++){
+            arr = randomArray(n);
+            mergeSort(arr);
+        }
+        endTime = System.currentTimeMillis();
+        sortTime = endTime - startTime;
+
+        return sortTime;
+
+    }
+
+    public static long timeSortParameterSlow(int n){
+        long startTime, endTime,sortTime;
+
+        startTime = System.currentTimeMillis();
+        for(int i = 0; i < 1000; i++){
+            arr = randomArray(n);
+            mergeSortSlow(arr,0,arr.length -1);
+        }
+        endTime = System.currentTimeMillis();
+        sortTime = endTime - startTime;
+
+        return sortTime;
+
+
+    }
+
+    private static void mergeSortRecursive(int[] arr, int temp[], int first , int last){
+
+        if(first < last){
+            int mid = (first + last) / 2;
+            mergeSortRecursive(arr,temp, first,mid);
+            mergeSortRecursive(arr,temp, mid + 1, last);
+            merge(arr,temp, first,mid,last);
+        }
+    }
+
+    public static void mergeSort(int[] arr){
+        int[] temp = new int[arr.length];
+        mergeSortRecursive(arr,temp,0,arr.length -1);
+    }
+
+    public static void merge(int[] arr,int[] temp, int first, int mid, int last){
+        int pos1 = first, pos2 = mid + 1, index = first;
+
+
+        while(pos1 <= mid && pos2 <= last){
+            if(arr[pos1] <= arr[pos2]) temp[index++] = arr[pos1++];
+            else temp[index++] = arr[pos2++];
+        }
+
+        while(pos1 <= mid) temp[index++] = arr[pos1++];
+        while(pos2 <= last) temp[index++] = arr[pos2++];
+
+        for(int i = first; i <= last; i++) arr[i] = temp[i];
+
+    }
+
+
+    public static void mergeSortSlow(int[] arr, int first, int last){
+        if(first < last){
+            int mid = (first + last) / 2;
+            mergeSortSlow(arr,first,mid);
+            mergeSortSlow(arr,mid + 1,last);
+            mergeSlow(arr,first,mid,last);
+        }
+    }
+
+    public static void mergeSlow(int[] arr, int first, int mid, int last){
+        int pos1 = first, pos2 = mid + 1, index = first;
+        int[] temp = new int[arr.length];
+
+        while(pos1 <= mid && pos2 <= last){
+            if(arr[pos1] <= arr[pos2]) temp[index++] = arr[pos1++];
+            else temp[index++] = arr[pos2++];
+        }
+
+        while(pos1 <= mid) temp[index++] = arr[pos1++];
+        while(pos2 <= last) temp[index++] = arr[pos2++];
+
+        for(int i = first; i <= last; i++) arr[i] = temp[i];
+
+    }
+
+
 
     public static void shellSort(int[] arr, double n){
         int temp, index;
@@ -97,13 +164,6 @@ public class Sort {
             }
         }
     }
-
-
-
-
-
-
-
 
     public static void bubbleSortSlow(int[] arr){
         int lastPos = arr.length -1;
