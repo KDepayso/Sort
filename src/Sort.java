@@ -5,6 +5,7 @@ public class Sort {
 
     public static int numComparisons = 0, numSwaps = 0, numUpdates = 0;
     public static int[] arraySizes = {100,200,400,800,1600,3200,6400};
+    public static int[] arraySizes2 = {10000,50000,100000};
     public static int[] arr = {9,2,7,1,10,3,6,4,5,8};
     public static int[] arrSorted = {1,2,3,4,5,6,7,8,9,10};
     public static int[] arrWorst = {10,9,8,7,6,5,4,3,2,1};
@@ -15,39 +16,57 @@ public class Sort {
 
 
 
+
+        for(int a = 0; a < arraySizes.length; a++){
+            startTime = System.currentTimeMillis();
+            for(int i = 0; i < 1000; i++){
+                arr = randomArray(arraySizes[a]);
+                quickSort(arr);
+            }
+            endTime = System.currentTimeMillis();
+            sortTimes[a] = endTime - startTime;
+        }
+
+
+
+        for(int a =0; a < arraySizes.length; a++){
+            System.out.println(arraySizes[a] + "\t" + sortTimes[a] + "\t");
+        }
 //
-//        for(int a = 0; a < arraySizes.length; a++){
+//
+//        System.out.println("QuickSort Times with Insertion");
+//        for(int a = 0; a < arraySizes2.length; a++){
 //            startTime = System.currentTimeMillis();
 //            for(int i = 0; i < 1000; i++){
-//                arr = randomArray(arraySizes[a]);
-//                mergeSort(arr);
+//                arr = randomArray(arraySizes2[a]);
+//                quickSortInsertion(arr);
 //            }
 //            endTime = System.currentTimeMillis();
 //            sortTimes[a] = endTime - startTime;
 //        }
 //
 //
-//        for(int a =0; a < arraySizes.length; a++){
-//            System.out.println(arraySizes[a] + "\t" + sortTimes[a] + "\t");
+//        for(int a =0; a < arraySizes2.length; a++){
+//            System.out.println(arraySizes2[a] + "\t" + sortTimes[a] + "\t");
 //        }
-//
+
 //
 
 //        System.out.println("Before: "+ Arrays.toString(arr));
-//        mergeSortSlow(arr,0,arr.length -1);
+//        quickSort(arr);
 //        System.out.println("After: "+ Arrays.toString(arr));
 //
 
 
 
 
-        System.out.println("Array Size : 5000");
-        System.out.println("Temporary array passed as paramater: " + timeSortParameter(5000));
-        System.out.println("Temporary array generated in merge method: " + timeSortParameterSlow(5000));
-
-        System.out.println("Array Size : 10000");
-        System.out.println("Temporary array passed as paramater: " + timeSortParameter(10000));
-        System.out.println("Temporary array generated in merge method: " + timeSortParameterSlow(10000));
+//        System.out.println("Array Size : 5000");
+//        System.out.println("Temporary array passed as paramater: " + timeSortParameter(5000));
+//        System.out.println("Temporary array generated in merge method: " + timeSortParameterSlow(5000));
+//
+//        System.out.println("Array Size : 10000");
+//        System.out.println("Temporary array passed as paramater: " + timeSortParameter(10000));
+//        System.out.println("Temporary array generated in merge method: " + timeSortParameterSlow(10000));
 
 
 
@@ -149,6 +168,65 @@ public class Sort {
 
     }
 
+    public static void quickSort(int[] arr){
+        quickSortRecursive(arr,0,arr.length-1);
+    }
+
+    public static void quickSortInsertion(int[] arr){
+        quickSortRecursiveInsertion(arr,0,arr.length-1);
+    }
+
+
+    public static void quickSortRecursive(int[] arr, int first, int last){
+        int middle = (first + last)/2;
+        orderThree(arr,first,middle,last);
+        swap(arr,middle,last);
+        int pivot = arr[last];
+        int indexFromLeft = first, indexFromRight = last;
+
+        while(indexFromLeft <= indexFromRight){
+            while(arr[indexFromLeft] < pivot) indexFromLeft++;
+            while(arr[indexFromRight] > pivot) indexFromRight--;
+            if(indexFromLeft <= indexFromRight) swap(arr,indexFromLeft++ ,indexFromRight--);
+        }
+
+        if(first < indexFromRight) quickSortRecursive(arr, first, indexFromRight);
+        if(indexFromLeft < last) quickSortRecursive(arr, indexFromLeft, last);
+
+    }
+
+    public static void quickSortRecursiveInsertion(int[] arr, int first, int last){
+        int middle = (first + last)/2;
+        orderThree(arr,first,middle,last);
+        swap(arr,middle,last);
+        int pivot = arr[last];
+        int indexFromLeft = first, indexFromRight = last;
+
+        while(indexFromLeft <= indexFromRight){
+            while(arr[indexFromLeft] < pivot) indexFromLeft++;
+            while(arr[indexFromRight] > pivot) indexFromRight--;
+            if(indexFromLeft <= indexFromRight) swap(arr,indexFromLeft++ ,indexFromRight--);
+        }
+
+        if(arr.length <= 100) insertionSort(arr);
+        else if(first < indexFromRight) quickSortRecursive(arr, first, indexFromRight);
+        else if(indexFromLeft < last) quickSortRecursive(arr, indexFromLeft, last);
+
+    }
+
+
+
+    private static void swap(int[] arr, int first, int second){
+        int temp = arr[first];
+        arr[first] = arr[second];
+        arr[second] = temp;
+    }
+
+    private static void orderThree(int[] arr, int first, int second, int third){
+        if(arr[first] > arr[second]) swap(arr,first,second);
+        if(arr[first] > arr[third]) swap(arr,first,second);
+        if(arr[second] > arr[third]) swap(arr,second,third);
+    }
 
 
     public static void shellSort(int[] arr, double n){
